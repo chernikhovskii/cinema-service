@@ -10,7 +10,11 @@
 #include <iostream>
 #include <sstream>
 
-Client::Client(int connfd) : connfd_(connfd), run_(true)
+Client::Client(int connfd) : connfd_(connfd),
+                             selectedTheaters_(-1),
+                             run_(true),
+                             readThread_(nullptr),
+                             writeThread_(nullptr)
 {
 }
 
@@ -22,7 +26,7 @@ void Client::Start()
     std::cout << __func__ << std::endl;
     readThread_ = new std::thread(&Client::ReadLoop, this);
     writeThread_ = new std::thread(&Client::WriteLoop, this);
-    writeThread_ = new std::thread(&Client::ProcessLoop, this);
+    processThread_ = new std::thread(&Client::ProcessLoop, this);
 }
 
 void Client::ReadLoop()
@@ -133,6 +137,11 @@ void Client::Finish()
     {
         writeThread_->join();
         delete writeThread_;
+    }
+    if (processThread_->joinable())
+    {
+        processThread_->join();
+        delete processThread_;
     }
     readQueue_.stop();
     writeQueue_.stop();

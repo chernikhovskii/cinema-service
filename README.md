@@ -32,3 +32,5 @@ for the purpose of this test
 • What did you find most cumbersome?
 # Compile
 cmake -S ./ -B Build && cmake --build Build -- -j 12
+
+g++ client.cc -o client && ./client
