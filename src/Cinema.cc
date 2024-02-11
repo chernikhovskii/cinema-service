@@ -16,7 +16,6 @@ Cinema *Cinema::GetInstance()
 
 Cinema::Cinema(/* args */)
 {
-    cout << ("Cinema service run") << endl;
 }
 
 Cinema::~Cinema()
@@ -65,7 +64,6 @@ std::vector<int> Cinema::GetAvailableSeats(int theaterNumber)
 
 bool Cinema::BookAvailableSeats(int theaterNumber, std::vector<unsigned int> number)
 {
-    std::cout << "Cinema" << __func__ << std::endl;
     bool res = false;
     if ((unsigned int)theaterNumber < movieList_.size())
     {
