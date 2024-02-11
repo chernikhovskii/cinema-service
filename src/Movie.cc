@@ -3,7 +3,6 @@
 Movie::Movie(const std::string &movieName) : movieName_(movieName), availableSeats_()
 {
 }
-Movie::Movie() {}
 
 Movie::~Movie()
 {
@@ -22,6 +21,7 @@ bool Movie::ReserveSeat(const unsigned int number)
     }
     return false;
 }
+
 bool Movie::ReleaseSeat(const unsigned int number)
 {
     const std::lock_guard<std::mutex> lock(mutex_);
@@ -55,7 +55,6 @@ std::string Movie::GetName()
 
 bool Movie::BookSeats(const std::vector<unsigned int> numbers)
 {
-    std::cout << "Movie" << __func__ << std::endl;
     const std::lock_guard<std::mutex> lock(mutex_);
     for (auto number : numbers)
     {
@@ -67,11 +66,6 @@ bool Movie::BookSeats(const std::vector<unsigned int> numbers)
     for (auto number : numbers)
     {
         availableSeats_[number] = true;
-    }
-
-    for (int i = 0; i < MAX_CAPACITY; i++)
-    {
-        std::cout << i << " " << availableSeats_[i] << std::endl;
     }
     return true;
 }
