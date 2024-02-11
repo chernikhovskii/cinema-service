@@ -1,6 +1,5 @@
 #include "Service.hh"
 #include <iostream>
-
 #include <thread>
 #include <string>
 
@@ -38,7 +37,8 @@ void Service::Init()
 
 void Service::Run()
 {
-    std::thread readThread(&Service::ReadLoop, this);
+    // Poor tone in the use of detach threads
+    thread readThread(&Service::ClientCreateLoop, this);
     readThread.detach();
     int connfd;
     while (loopRun_)
@@ -51,7 +51,7 @@ void Service::Run()
     }
 }
 
-void Service::ReadLoop()
+void Service::ClientCreateLoop()
 {
     while (loopRun_)
     {
