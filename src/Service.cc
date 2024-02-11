@@ -21,6 +21,7 @@ void Service::Init()
     cinema->AddMovie("Titanic");
     cinema->AddMovie("Jaws");
 
+    // can be replaced by reading the configuration from a file
     bzero(&serv_, sizeof(serv_));
     serv_.sin_family = AF_INET;
     serv_.sin_port = htons(3345);
