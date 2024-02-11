@@ -1,3 +1,13 @@
+//
+// simple app to test the app (not for evaluation, made for personal use )
+//
+//
+//
+//
+//
+//
+//
+
 #include <iostream>
 #include <unistd.h>
 #include <sys/types.h>
@@ -26,11 +36,11 @@ int main()
         fgets(data, 100, stdin);
         data[strlen(data) - 1] = 0;
         n = strlen(data);
-        cout << "You have written " << n << endl; // this returns the correct value
+        cout << "You have written " << n << endl;
         write(clifd, data, n);
 
         n = read(clifd, recvd, 256);
         recvd[n] = 0;
-        cout << "Server echoed back " << n << " " << string(recvd) << endl; // this doesn't get displayed
+        cout << "Server back " << n << " " << string(recvd) << endl;
     }
 }
