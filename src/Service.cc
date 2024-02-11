@@ -7,7 +7,6 @@
 using namespace std;
 Service::Service(/* args */)
 {
-    cout << ("Service run") << endl;
 }
 
 Service::~Service()
@@ -44,18 +43,16 @@ void Service::Run()
     int connfd;
     while (loopRun_)
     {
-        cout << "accept" << endl;
         if ((connfd = accept(servfd_, &cli_, &siz_)) >= 0)
         {
             readQueue_.push(connfd);
-            cout << "accept, connfd: " << connfd << endl;
+            cout << "Accept, connfd: " << connfd << endl;
         }
     }
 }
 
 void Service::ReadLoop()
 {
-    cout << __func__ << endl;
     while (loopRun_)
     {
         int connfd;
@@ -64,7 +61,6 @@ void Service::ReadLoop()
             Client *client = new Client(connfd);
             client->Start();
             clientList_.push_back(client);
-            // RunCMD(connfd);
         }
     }
 }

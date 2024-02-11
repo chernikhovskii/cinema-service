@@ -6,9 +6,13 @@
 #define CMD_SIZE 256
 struct Payload
 {
-    Payload() {}
+    Payload()
+    {
+        memset(payload_, 0, CMD_SIZE);
+    }
     Payload(const char *payload, int len)
     {
+        memset(payload_, 0, CMD_SIZE);
         if (len >= CMD_SIZE)
             len = CMD_SIZE - 1;
         memcpy(payload_, payload, len);
@@ -45,6 +49,7 @@ private:
     std::string BookAvailableSeats(const std::string &orderList);
 
     void Split(const std::string &src, char delim, std::vector<std::string> &result);
+    bool StartsWith(const char *a, const char *b);
 
 public:
     void Start();

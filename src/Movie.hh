@@ -53,13 +53,13 @@ public:
      */
     bool BookSeats(const std::vector<unsigned int> numbers);
     /**
-     * @brief Get the Available Seats List
+     * @brief Get the available seats list
      *
      * @return std::vector<int> List of available seats
      */
     std::vector<int> GetAvailableSeats();
     /**
-     * @brief Get the Movie Title
+     * @brief Get the movie title
      *
      * @return std::string Movie Title
      */

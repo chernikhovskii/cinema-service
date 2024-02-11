@@ -66,6 +66,13 @@ void Client::WriteLoop()
     }
 }
 
+bool Client::StartsWith(const char *a, const char *b)
+{
+    if (strncmp(a, b, strlen(b)) == 0)
+        return 1;
+    return 0;
+}
+
 void Client::ProcessLoop()
 {
 
@@ -74,41 +81,41 @@ void Client::ProcessLoop()
         Payload payload;
         if (readQueue_.pop(payload))
         {
-            if (payload.len_ > 0 && payload.payload_[0] == 'C')
+            std::string answer;
+            if (payload.len_ >= 2 && StartsWith(payload.payload_, "C0"))
             {
-                std::string answer;
-                switch (payload.payload_[1])
-                {
-                case '0':
-                    answer = ViewAllPlayingMovies();
-                    break;
-                case '1':
-                    answer = SelectMovie(&payload.payload_[2]);
-                    break;
-                case '2':
-                    answer = SeeAllTheatersShowingTheMovie();
-                    break;
-                case '3':
-                {
-                    stringstream ss;
-                    int num;
-                    string str(&payload.payload_[2]);
-                    ss << str;
-                    ss >> num;
-                    answer = SelectTheater(num);
-                }
-                break;
-                case '4':
-                    answer = SeeAvailableSeats();
-                    break;
-                case '5':
-                    answer = BookAvailableSeats(&payload.payload_[2]);
-                    break;
-                default:
-                    break;
-                }
-                writeQueue_.push({answer.c_str(), (int)answer.size()});
+                answer = ViewAllPlayingMovies();
             }
+            else if (payload.len_ >= 3 && StartsWith(payload.payload_, "C1"))
+            {
+                answer = SelectMovie(&payload.payload_[2]);
+            }
+            else if (payload.len_ >= 2 && StartsWith(payload.payload_, "C2"))
+            {
+                answer = SeeAllTheatersShowingTheMovie();
+            }
+            else if (payload.len_ >= 3 && StartsWith(payload.payload_, "C3"))
+            {
+                stringstream ss;
+                int num;
+                string str(&payload.payload_[2]);
+                ss << str;
+                ss >> num;
+                answer = SelectTheater(num);
+            }
+            else if (payload.len_ >= 2 && StartsWith(payload.payload_, "C4"))
+            {
+                answer = SeeAvailableSeats();
+            }
+            else if (payload.len_ >= 3 && StartsWith(payload.payload_, "C5"))
+            {
+                answer = BookAvailableSeats(&payload.payload_[2]);
+            }
+            else
+            {
+                answer = resERROR;
+            }
+            writeQueue_.push({answer.c_str(), (int)answer.size()});
         }
     }
 }
@@ -138,7 +145,6 @@ std::string Client::ViewAllPlayingMovies()
     auto res = cinema->GetMovieList();
     for (auto r : res)
     {
-        cout << r << " " << r.size() << endl;
         if (!answer.empty())
         {
             answer += ',';
@@ -249,13 +255,21 @@ std::string Client::BookAvailableSeats(const std::string &tickets)
     Split(tickets, ',', ticketList);
 
     std::vector<unsigned int> ticketListNum;
+    std::set<unsigned int> ticketSetNum;
     for (auto t : ticketList)
     {
         stringstream ss;
-        int num;
+        int num = -1;
+
         ss << t;
         ss >> num;
+
         ticketListNum.push_back(num);
+        ticketSetNum.insert(num);
+    }
+    if (ticketListNum.size() != ticketSetNum.size())
+    {
+        return resERROR;
     }
     bool res = cinema->BookAvailableSeats(selectedTheaters_, ticketListNum);
     answer = res ? resOK : resERROR;
