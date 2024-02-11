@@ -17,8 +17,10 @@ You can assume that all theaters have 20 seats capacity
 multiple requests simultaneously (no over-bookings)
 
 # Compile
-Compile main app
+### Compile main app
+
 cmake -S ./ -B Build && cmake --build Build -- -j 12
 
-Simple app to test the app (not for evaluation, made for personal use )
+### Simple app to test the app (not for evaluation, made for personal use )
+
 g++ client.cc -o client && ./client
